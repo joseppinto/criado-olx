@@ -34,13 +34,14 @@ def email_results(r):
         return
     message = f"""\
         Novos anúncios encontrados!!
-        
         """
     for i in range(len(r['url'])):
-        message += f"Item: {r['item'][i]}\n"
-        message += f"Preço: {r['price'][i]}\n"
-        message += f"Url: {r['url'][i]}\n"
-        message += f"--------------------------------\n"
+        message += f"""
+        Item: {r['item'][i]}
+        Preço: {r['price'][i]}
+        Url: {r['url'][i]}
+        -------------------------------------------
+        """
 
     context = ssl.create_default_context()
     with smtplib.SMTP(SMTP_SERVER, PORT) as server:
