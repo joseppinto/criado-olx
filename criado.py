@@ -37,7 +37,7 @@ def email_results(r):
     for i in range(len(r['url'])):
         items += f"""
         
-            Item: {r['item'][i]}
+            Item: {r['title'][i]}
             Preço: {r['price'][i]}
             Url: {r['url'][i]}
             -------------------------------------------
