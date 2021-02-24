@@ -2,19 +2,15 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 import pandas as pd
 import lxml.html
 import requests
-import smtplib
-import ssl
 import os
+import sys
+import json
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
 WISHLIST_FILE = f'{DIR}/wishlist.txt'
 DATA_FILE = f'{DIR}/data.csv'
-SENDER_EMAIL = os.environ['SENDER_EMAIL']
-SENDER_EMAIL_PASS = os.environ['SENDER_EMAIL_PASS']
-RECIPIENT_EMAIL = os.environ['RECIPIENT_EMAIL']
-PORT = 587
-SMTP_SERVER = "smtp.gmail.com"
+MESSENGER_ID = os.environ["MESSENGER_ID"]
 
 # SCRIPT
 
@@ -29,35 +25,25 @@ def save_ad(r, item, url, title, price):
     r['price'].append(price)
 
 
-def email_results(r):
+def message_results(r):
     if len(r['url']) == 0:
         return
     items = ""
 
     for i in range(len(r['url'])):
         items += f"""
+            -------------------------------------------
         
             Item: {r['title'][i]}
             Preço: {r['price'][i]}
             Url: {r['url'][i]}
-            -------------------------------------------
-            
             """
     message = f"""\
         Novos anúncios encontrados!!
         
         {items}
         """
-
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP(SMTP_SERVER, PORT) as server:
-        server.ehlo()  # Can be omitted
-        server.starttls(context=context)
-        server.ehlo()  # Can be omitted
-        server.login(SENDER_EMAIL, SENDER_EMAIL_PASS)
-        server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, message.encode())
-    print(f"Email sent to {RECIPIENT_EMAIL}")
+    send_message(MESSENGER_ID, message)
 
 
 def criado():
@@ -99,9 +85,36 @@ def criado():
 
     df = pd.concat([df, pd.DataFrame(results)], axis=0)
     df.to_csv(DATA_FILE, index=False)
-    email_results(results)
+    message_results(results)
     print(f"Found {len(results['url'])} ads")
 
+
+def send_message(recipient_id, message_text):
+    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text.encode('utf-8')))
+
+    params = {
+        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+    }
+    headers = {
+        "Content-Type": "application/json; charset=utf-8"
+    }
+    data = json.dumps({
+        "recipient": {
+            "id": recipient_id
+        },
+        "message": {
+            "text": message_text
+        }
+    })
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    if r.status_code != 200:
+        log(r.status_code)
+        log(r.text)
+
+
+def log(message):
+    print(str(message))
+    sys.stdout.flush()
 
 # Create an instance of scheduler and add function.
 scheduler = BlockingScheduler()
