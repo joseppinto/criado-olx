@@ -20,18 +20,6 @@ SMTP_SERVER = "smtp.gmail.com"
 
 # Read wishlist and database
 wishlist = [x for x in open(WISHLIST_FILE, "r").readlines()]
-df = pd.DataFrame(columns=['item', 'url', 'title', 'price'])
-if os.path.exists(DATA_FILE):
-    df = pd.read_csv(DATA_FILE)
-
-df = df[df['item'].isin(wishlist)]
-
-results = {
-    'item': [],
-    'url': [],
-    'title': [],
-    'price': []
-}
 
 
 def save_ad(r, item, url, title, price):
@@ -44,7 +32,10 @@ def save_ad(r, item, url, title, price):
 def email_results(r):
     if len(r['url']) == 0:
         return
-    message = "Novos anúncios encontrados!"
+    message = """\
+        Subject: Novos anúncios encontrados!!
+        
+        """
     for i in range(len(r['url'])):
         message += f"\nItem: {r['item'][i]}"
         message += f"\nPreço: {r['price'][i]}"
@@ -62,6 +53,18 @@ def email_results(r):
 
 
 def criado():
+    results = {
+        'item': [],
+        'url': [],
+        'title': [],
+        'price': []
+    }
+    df = pd.DataFrame(columns=['item', 'url', 'title', 'price'])
+    if os.path.exists(DATA_FILE):
+        df = pd.read_csv(DATA_FILE)
+
+    df = df[df['item'].isin(wishlist)]
+
     for item in wishlist:
         search_url = 'https://www.olx.pt/ads/q-' + item.replace(" ", "-")
         r = requests.get(search_url)
@@ -86,8 +89,8 @@ def criado():
                     df.drop(index, axis=0, inplace=True)
                     save_ad(results, item, url, title, price)
 
-    df2 = pd.concat([df, pd.DataFrame(results)], axis=0)
-    df2.to_csv(DATA_FILE, index=False)
+    df = pd.concat([df, pd.DataFrame(results)], axis=0)
+    df.to_csv(DATA_FILE, index=False)
     email_results(results)
     print(f"Found {len(results['url'])} ads")
 
