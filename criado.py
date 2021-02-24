@@ -32,15 +32,15 @@ def save_ad(r, item, url, title, price):
 def email_results(r):
     if len(r['url']) == 0:
         return
-    message = """\
-        Subject: Novos anúncios encontrados!!
+    message = f"""\
+        Novos anúncios encontrados!!
         
         """
     for i in range(len(r['url'])):
-        message += f"\nItem: {r['item'][i]}"
-        message += f"\nPreço: {r['price'][i]}"
-        message += f"\nUrl: {r['url'][i]}"
-        message += f"--------------------------------"
+        message += f"Item: {r['item'][i]}\n"
+        message += f"Preço: {r['price'][i]}\n"
+        message += f"Url: {r['url'][i]}\n"
+        message += f"--------------------------------\n"
 
     context = ssl.create_default_context()
     with smtplib.SMTP(SMTP_SERVER, PORT) as server:
