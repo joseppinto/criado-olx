@@ -4,7 +4,6 @@ import requests
 import smtplib
 import ssl
 import os
-import sys
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
@@ -12,7 +11,7 @@ WISHLIST_FILE = f'{DIR}/wishlist.txt'
 DATA_FILE = f'{DIR}/data.csv'
 SENDER_EMAIL = os.environ['SENDER_EMAIL']
 SENDER_EMAIL_PASS = os.environ['SENDER_EMAIL_PASS']
-RECIPIENT_EMAIL = sys.argv[1]
+RECIPIENT_EMAIL = os.environ['RECIPIENT_EMAIL']
 PORT = 587
 SMTP_SERVER = "smtp.gmail.com"
 
@@ -89,3 +88,4 @@ for item in wishlist:
 df = pd.concat([df, pd.DataFrame(results)], axis=0)
 df.to_csv(DATA_FILE, index=False)
 email_results(results)
+print(f"Found {len(results['url'])} ads")
