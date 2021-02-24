@@ -76,7 +76,7 @@ def criado():
             url = url[0]
             title = ad.xpath(".//h3/a/strong/text()")[0]
             price = ad.xpath(".//p[contains(@class,'price')]/strong/text()")[0].strip()
-            price = float(price.replace("€", ""))
+            price = float(price.replace("€", "").replace(",", "."))
 
             if df['url'].str.contains(url).sum() == 0:
                 save_ad(results, item, url, title, price)
