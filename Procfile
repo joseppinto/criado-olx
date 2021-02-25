@@ -1,2 +1,2 @@
 clock: python3 criado.py
-web: gunicorn app:app/web --log-file=-
+web: gunicorn --chdir app web:app
