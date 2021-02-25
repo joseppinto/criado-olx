@@ -80,6 +80,12 @@ def criado():
     print(f"Found {len(results['url'])} ads")
 
 
+def render_template(file_name, **context):
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates/"))\
+        .get_template(file_name)\
+        .render(context)
+
+
 def print_index(df):
     s = render_template('template.html', df=df)
     text_file = open(f'{DIR}/templates/index.html', "w")
@@ -114,11 +120,6 @@ def log(message):
     print(str(message))
     sys.stdout.flush()
 
-
-def render_template(file_name,**context):
-    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates"))\
-        .get_template(file_name)\
-        .render(context)
 
 
 # Create an instance of scheduler and add function.
