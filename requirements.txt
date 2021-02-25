@@ -2,3 +2,5 @@ pandas
 lxml
 requests
 apscheduler
+django-request
+Flask
