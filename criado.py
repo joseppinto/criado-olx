@@ -32,7 +32,8 @@ def message_results(r):
 
     for i in range(len(r['url'])):
         message = ""
-        message += f"""
+        message += \
+            f"""
             Item: {r['title'][i]}
             Preço: {r['price'][i]}
             Url: {r['url'][i]}
@@ -110,6 +111,7 @@ def send_message(recipient_id, message_text):
 def log(message):
     print(str(message))
     sys.stdout.flush()
+
 
 # Create an instance of scheduler and add function.
 scheduler = BlockingScheduler()
