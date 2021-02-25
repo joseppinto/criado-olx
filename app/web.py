@@ -11,7 +11,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 
 @app.route('/', methods=['GET'])
 def webhook():
-    return render_template('template.html', df=pd.read_csv('data.csv'))
+    return render_template('template.html', df=pd.read_csv('./static/data.csv'))
 
 
 def log(message):

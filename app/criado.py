@@ -8,8 +8,8 @@ import json
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
-WISHLIST_FILE = f'{DIR}/wishlist.txt'
-DATA_FILE = f'{DIR}/data.csv'
+WISHLIST_FILE = f'{DIR}/static/wishlist.txt'
+DATA_FILE = f'{DIR}/static/data.csv'
 MESSENGER_ID = os.environ["MESSENGER_ID"]
 
 # SCRIPT
