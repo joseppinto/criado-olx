@@ -28,17 +28,10 @@ def save_ad(r, item, url, title, price):
 def message_results(r):
     if len(r['url']) == 0:
         return
-    items = ""
-
+    message = ""
     for i in range(len(r['url'])):
-        message = ""
-        message += \
-            f"""
-            Item: {r['title'][i]}
-            Preço: {r['price'][i]}
-            Url: {r['url'][i]}
-            ---
-            """
+        message += f"Item: {r['title'][i]}\nPreço: {r['price'][i]}\nUrl: {r['url'][i]}\n---"
+
     send_message(MESSENGER_ID, message)
 
 
