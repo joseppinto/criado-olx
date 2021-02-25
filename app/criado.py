@@ -1,11 +1,12 @@
-import pandas as pd
-import lxml.html
-import requests
-import os
 import json
-import jinja2
-from flask import Flask
+import os
 import sys
+
+import jinja2
+import lxml.html
+import pandas as pd
+import requests
+from flask import Flask
 
 app = Flask(__name__)
 
@@ -13,31 +14,28 @@ app = Flask(__name__)
 DIR = os.path.dirname(os.path.realpath(__file__))
 WISHLIST_FILE = f'{DIR}/wishlist.txt'
 DATA_FILE = f'{DIR}/data.csv'
+WISHLIST = [x for x in open(WISHLIST_FILE, "r").readlines()]
+
 MESSENGER_ID = os.environ["MESSENGER_ID"]
+MESSENGER_PAGE_ACCESS_TOKEN = os.environ["PAGE_ACCESS_TOKEN"]
 
-# SCRIPT
-
-# Read wishlist and database
-wishlist = [x for x in open(WISHLIST_FILE, "r").readlines()]
-
-
-def save_ad(r, item, url, title, price):
-    r['item'].append(item)
-    r['url'].append(url)
-    r['title'].append(title)
-    r['price'].append(price)
+# FLASK ROUTES
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
-def message_results(r):
-    if len(r['url']) == 0:
-        return
-    message = ""
-    for i in range(len(r['url'])):
-        message += f"Item: {r['title'][i]}\nPreço: {r['price'][i]}\nUrl: {r['url'][i]}\n---"
-
-    send_message(MESSENGER_ID, message)
+@app.route('/', methods=['GET'])
+def webhook():
+    return render_template('index.html')
 
 
+@app.route('/update', methods=['GET'])
+def update():
+    criado()
+    return 'OK', 200
+
+
+# BOT LOGIC
 def criado():
     results = {
         'item': [],
@@ -49,9 +47,9 @@ def criado():
     if os.path.exists(DATA_FILE):
         df = pd.read_csv(DATA_FILE)
 
-    df = df[df['item'].isin(wishlist)]
+    df = df[df['item'].isin(WISHLIST)]
 
-    for item in wishlist:
+    for item in WISHLIST:
         search_url = 'https://www.olx.pt/ads/q-' + item.replace(" ", "-")
         r = requests.get(search_url)
         root = lxml.html.fromstring(r.content)
@@ -75,16 +73,25 @@ def criado():
                     df.drop(index, axis=0, inplace=True)
                     save_ad(results, item, url, title, price)
 
-    df = pd.concat([df, pd.DataFrame(results)], axis=0)
-    df.to_csv(DATA_FILE, index=False)
-    message_results(results)
-    print_index(df)
+    if len(results['url']) > 0:
+        df = pd.concat([df, pd.DataFrame(results)], axis=0).sort_values(['price'])
+        df.to_csv(DATA_FILE, index=False)
+        message_results(results)
+        print_index(df)
     print(f"Found {len(results['url'])} ads")
 
 
+# UTILS
+def save_ad(r, item, url, title, price):
+    r['item'].append(item)
+    r['url'].append(url)
+    r['title'].append(title)
+    r['price'].append(price)
+
+
 def render_template(file_name, **context):
-    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates/"))\
-        .get_template(file_name)\
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates/")) \
+        .get_template(file_name) \
         .render(context)
 
 
@@ -95,11 +102,21 @@ def print_index(df):
     text_file.close()
 
 
+def message_results(r):
+    if len(r['url']) == 0:
+        return
+    message = ""
+    for i in range(len(r['url'])):
+        message += f"Item: {r['title'][i]}\nPreço: {r['price'][i]}\nUrl: {r['url'][i]}\n---"
+
+    send_message(MESSENGER_ID, message)
+
+
 def send_message(recipient_id, message_text):
-    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text.encode('utf-8')))
+    log(f"Sending message to {recipient_id}:\n {message_text}\n")
 
     params = {
-        "access_token": os.environ["PAGE_ACCESS_TOKEN"]
+        "access_token": MESSENGER_PAGE_ACCESS_TOKEN
     }
     headers = {
         "Content-Type": "application/json; charset=utf-8"
@@ -121,23 +138,3 @@ def send_message(recipient_id, message_text):
 def log(message):
     print(str(message))
     sys.stdout.flush()
-
-
-@app.route('/', methods=['GET'])
-def webhook():
-    return render_template('index.html')
-
-
-@app.route('/update', methods=['GET'])
-def update():
-    criado()
-    return 'OK', 200
-
-
-def log(message):
-    print(str(message))
-    sys.stdout.flush()
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
