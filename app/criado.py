@@ -5,7 +5,7 @@ import requests
 import os
 import json
 import jinja2
-from flask import Flask, render_template
+from flask import Flask
 import sys
 
 app = Flask(__name__)
@@ -81,6 +81,12 @@ def criado():
     message_results(results)
     print_index(df)
     print(f"Found {len(results['url'])} ads")
+
+
+def render_template(file_name, **context):
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates/"))\
+        .get_template(file_name)\
+        .render(context)
 
 
 def print_index(df):
