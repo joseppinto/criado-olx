@@ -3,9 +3,12 @@ import pandas as pd
 import lxml.html
 import requests
 import os
-import sys
 import json
 import jinja2
+from flask import Flask, render_template
+import sys
+
+app = Flask(__name__)
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
@@ -80,12 +83,6 @@ def criado():
     print(f"Found {len(results['url'])} ads")
 
 
-def render_template(file_name, **context):
-    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates/"))\
-        .get_template(file_name)\
-        .render(context)
-
-
 def print_index(df):
     s = render_template('template.html', df=df)
     text_file = open(f'{DIR}/templates/index.html', "w")
@@ -121,9 +118,21 @@ def log(message):
     sys.stdout.flush()
 
 
-
 # Create an instance of scheduler and add function.
 scheduler = BlockingScheduler()
 scheduler.add_job(criado, "interval", seconds=60)
-
 scheduler.start()
+
+
+@app.route('/', methods=['GET'])
+def webhook():
+    return render_template('index.html')
+
+
+def log(message):
+    print(str(message))
+    sys.stdout.flush()
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
