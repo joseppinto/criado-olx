@@ -1,2 +1,2 @@
-clock: python3 app/criado.py
+clock: python3 app/job
 web: gunicorn --chdir app criado:app

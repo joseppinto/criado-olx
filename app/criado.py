@@ -1,4 +1,3 @@
-from apscheduler.schedulers.blocking import BlockingScheduler
 import pandas as pd
 import lxml.html
 import requests
@@ -124,15 +123,15 @@ def log(message):
     sys.stdout.flush()
 
 
-# Create an instance of scheduler and add function.
-scheduler = BlockingScheduler()
-scheduler.add_job(criado, "interval", seconds=60)
-scheduler.start()
-
-
 @app.route('/', methods=['GET'])
 def webhook():
     return render_template('index.html')
+
+
+@app.route('/update', methods=['GET'])
+def update():
+    criado()
+    return 'OK', 200
 
 
 def log(message):
