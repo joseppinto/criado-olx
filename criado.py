@@ -31,18 +31,13 @@ def message_results(r):
     items = ""
 
     for i in range(len(r['url'])):
-        items += f"""
-            -------------------------------------------
-        
+        message = ""
+        message += f"""
             Item: {r['title'][i]}
             Preço: {r['price'][i]}
             Url: {r['url'][i]}
+            ---
             """
-    message = f"""\
-        Novos anúncios encontrados!!
-        
-        {items}
-        """
     send_message(MESSENGER_ID, message)
 
 
