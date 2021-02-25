@@ -1,9 +1,10 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 import requests
+import os
 
 
 def job():
-    requests.get(url='https://criado-olx.herokuapp.com/update')
+    requests.get(url=os.environ["UPDATE_URL"])
 
 
 # Create an instance of scheduler and add function.
