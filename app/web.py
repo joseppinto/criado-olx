@@ -7,12 +7,11 @@ import os
 app = Flask(__name__)
 
 DIR = os.path.dirname(os.path.realpath(__file__))
-DATA_FILE = f'../data.csv'
 
 
 @app.route('/', methods=['GET'])
 def webhook():
-    return render_template('template.html', df=pd.read_csv(DATA_FILE))
+    return render_template('template.html', df=pd.read_csv('data.csv'))
 
 
 def log(message):
