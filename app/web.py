@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 DIR = os.path.dirname(os.path.realpath(__file__))
-DATA_FILE = f'{DIR}/../data.csv'
+DATA_FILE = f'../data.csv'
 
 
 @app.route('/', methods=['GET'])
