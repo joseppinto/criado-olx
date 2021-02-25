@@ -5,3 +5,4 @@ apscheduler
 django-request
 Flask
 gunicorn
+jinja2

@@ -5,7 +5,7 @@ import requests
 import os
 import sys
 import json
-from flask import render_template
+import jinja2
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
@@ -113,6 +113,12 @@ def send_message(recipient_id, message_text):
 def log(message):
     print(str(message))
     sys.stdout.flush()
+
+
+def render_template(file_name,**context):
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(f"{DIR}/templates"))\
+        .get_template(file_name)\
+        .render(context)
 
 
 # Create an instance of scheduler and add function.
