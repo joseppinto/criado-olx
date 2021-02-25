@@ -1,3 +1,4 @@
-app/static/data.csv
+app/data.csv
+app/templates/index.html
 venv
 .idea

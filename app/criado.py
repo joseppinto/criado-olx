@@ -5,11 +5,12 @@ import requests
 import os
 import sys
 import json
+from flask import render_template
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
-WISHLIST_FILE = f'{DIR}/static/wishlist.txt'
-DATA_FILE = f'{DIR}/static/data.csv'
+WISHLIST_FILE = f'{DIR}/wishlist.txt'
+DATA_FILE = f'{DIR}/data.csv'
 MESSENGER_ID = os.environ["MESSENGER_ID"]
 
 # SCRIPT
@@ -75,7 +76,15 @@ def criado():
     df = pd.concat([df, pd.DataFrame(results)], axis=0)
     df.to_csv(DATA_FILE, index=False)
     message_results(results)
+    print_index(df)
     print(f"Found {len(results['url'])} ads")
+
+
+def print_index(df):
+    s = render_template('template.html', df=df)
+    text_file = open(f'{DIR}/templates/index.html', "w")
+    text_file.write(s)
+    text_file.close()
 
 
 def send_message(recipient_id, message_text):
