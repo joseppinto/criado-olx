@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Criado</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" rel="stylesheet">
     <style type="text/css">
-      .container {
-        max-width: 500px;
-        padding-top: 100px;
-      }
+        .container {
+            max-width: 500px;
+            padding-top: 100px;
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <td class="c1">Item</td>
-                    <td class="c2">Title</td>
-                    <td class="c3">Price</td>
-                    <td class="c3">Url</td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i, row in df.iterrows() %}
-                    <tr>
-                       <td class="c1">{{row['item']}}</td>
-                       <td class="c2">{{row['title']}}</td>
-                       <td class="c3">{{row['price']}}</td>
-                       <td class="c3">{{row['url']}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-  </body>
+</head>
+<body>
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <td class="c1">Item</td>
+            <td class="c2">Title</td>
+            <td class="c3">Price</td>
+            <td class="c3">Url</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i, row in df.iterrows() %}
+        <tr>
+            <td class="c1">{{row['item']}}</td>
+            <td class="c2">{{row['title']}}</td>
+            <td class="c3">{{row['price']}}</td>
+            <td class="c3"><a href="{{row['url']}}">Link</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
 </html>
