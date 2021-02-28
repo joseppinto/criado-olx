@@ -7,4 +7,3 @@ Flask
 gunicorn
 jinja2
 psycopg2
-sqlalchemy

@@ -5,9 +5,9 @@ import sys
 import jinja2
 import lxml.html
 import pandas as pd
+import psycopg2
 import requests
 from flask import Flask
-from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
@@ -21,8 +21,7 @@ MESSENGER_PAGE_ACCESS_TOKEN = os.environ["PAGE_ACCESS_TOKEN"]
 
 DATABASE_URL = os.environ["DATABASE_URL"]
 ADS_TABLE_NAME = 'ads'
-ENGINE = create_engine(DATABASE_URL)
-CONN = ENGINE.connect()
+CONN = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # FLASK ROUTES
 if __name__ == '__main__':
