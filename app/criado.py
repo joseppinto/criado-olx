@@ -51,8 +51,8 @@ def criado():
     df = pd.DataFrame(columns=['item', 'url', 'title', 'price'])
     try:
         df = pd.read_sql(f'select * from "{ADS_TABLE_NAME}"')
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
     df = df[df['item'].isin(WISHLIST)]
 
