@@ -7,17 +7,22 @@ import lxml.html
 import pandas as pd
 import requests
 from flask import Flask
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
 # CONFIGS
 DIR = os.path.dirname(os.path.realpath(__file__))
 WISHLIST_FILE = f'{DIR}/wishlist.txt'
-DATA_FILE = f'{DIR}/data.csv'
 WISHLIST = [x for x in open(WISHLIST_FILE, "r").readlines()]
 
 MESSENGER_ID = os.environ["MESSENGER_ID"]
 MESSENGER_PAGE_ACCESS_TOKEN = os.environ["PAGE_ACCESS_TOKEN"]
+
+DATABASE_URL = os.environ["DATABASE_URL"]
+ADS_TABLE_NAME = 'ads'
+ENGINE = create_engine(DATABASE_URL)
+CONN = ENGINE.connect()
 
 # FLASK ROUTES
 if __name__ == '__main__':
@@ -44,8 +49,10 @@ def criado():
         'price': []
     }
     df = pd.DataFrame(columns=['item', 'url', 'title', 'price'])
-    if os.path.exists(DATA_FILE):
-        df = pd.read_csv(DATA_FILE)
+    try:
+        df = pd.read_sql(f'select * from "{ADS_TABLE_NAME}"')
+    except:
+        pass
 
     df = df[df['item'].isin(WISHLIST)]
 
@@ -75,7 +82,7 @@ def criado():
 
     if len(results['url']) > 0:
         df = pd.concat([df, pd.DataFrame(results)], axis=0).sort_values(['price'])
-        df.to_csv(DATA_FILE, index=False)
+        df.to_sql(ADS_TABLE_NAME, CONN, if_exists='replace')
         message_results(results)
         print_index(df)
     print(f"Found {len(results['url'])} ads")
@@ -107,7 +114,7 @@ def message_results(r):
         return
     message = ""
     for i in range(len(r['url'])):
-        message += f"Item: {r['title'][i]}\nPreço: {r['price'][i]}\nUrl: {r['url'][i]}\n---"
+        message += f"Item: {r['title'][i]}\nPreço: {r['price'][i]}\nUrl: {r['url'][i]}\n---\n"
 
     send_message(MESSENGER_ID, message)
 
