@@ -15,6 +15,7 @@ app = Flask(__name__)
 DIR = os.path.dirname(os.path.realpath(__file__))
 WISHLIST_FILE = f'{DIR}/wishlist.txt'
 WISHLIST = [x for x in open(WISHLIST_FILE, "r").readlines()]
+HTML_PAGE_PATH = f'{DIR}/templates/index.html'
 
 MESSENGER_ID = os.environ["MESSENGER_ID"]
 MESSENGER_PAGE_ACCESS_TOKEN = os.environ["PAGE_ACCESS_TOKEN"]
@@ -80,11 +81,12 @@ def criado():
                     df.drop(index, axis=0, inplace=True)
                     save_ad(results, item, url, title, price)
 
-    if len(results['url']) > 0:
+    new_ads_flag = len(results['url']) > 0
+    if new_ads_flag:
         df = pd.concat([df, pd.DataFrame(results)], axis=0).sort_values(['price'])
         df.to_sql(ADS_TABLE_NAME, CONN, if_exists='replace')
         message_results(results)
-        print_index(df)
+    print_index(df, new_ads_flag)
     print(f"Found {len(results['url'])} ads")
 
 
@@ -102,11 +104,12 @@ def render_template(file_name, **context):
         .render(context)
 
 
-def print_index(df):
-    s = render_template('template.html', df=df)
-    text_file = open(f'{DIR}/templates/index.html', "w")
-    text_file.write(s)
-    text_file.close()
+def print_index(df, flag):
+    if not os.path.exists(HTML_PAGE_PATH) or flag:
+        s = render_template('template.html', df=df)
+        text_file = open(f'{DIR}/templates/index.html', "w")
+        text_file.write(s)
+        text_file.close()
 
 
 def message_results(r):
