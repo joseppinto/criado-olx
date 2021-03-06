@@ -78,7 +78,8 @@ def criado():
     }
     main_df = get_table(ADS_TABLE_NAME)
     wish_df = get_table(WISHLIST_TABLE_NAME)
-
+    dfs = []
+    new_ads = 0
     for u in wish_df['user'].unique():
         df = main_df[main_df.user == u]
         w_df = wish_df[wish_df.user == u]
@@ -109,13 +110,16 @@ def criado():
                         df.drop(index, axis=0, inplace=True)
                         save_ad(results, item, url, title, price)
 
-        new_ads_flag = len(results['url']) > 0
-        if new_ads_flag:
+        new_ads += len(results['url'])
+        if len(results['url']) > 0:
             df = pd.concat([df, pd.DataFrame(results)], axis=0).sort_values(['price'])
-            df.to_sql(ADS_TABLE_NAME, CONN, if_exists='replace')
             message_results(u, results)
-        print_index(df, new_ads_flag)
-        print(f"Found {len(results['url'])} ads")
+        dfs.append(df)
+    if new_ads > 0:
+        main_df = pd.concat(dfs, axis=0)
+        set_table(ADS_TABLE_NAME, main_df)
+        print_index(main_df)
+    print(f"Found {new_ads} ads")
 
 
 def add(id, item):
