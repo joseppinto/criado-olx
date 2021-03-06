@@ -54,7 +54,7 @@ def receive_message():
         log(e)
     if command in functions:
         return Response(stream_with_context(next(
-            functions[command](sender_id, ' '.join(arr[1:]))), mimetype='text/html'))
+            functions[command](sender_id, ' '.join(arr[1:])))))
     return "OK", 200
 
 
