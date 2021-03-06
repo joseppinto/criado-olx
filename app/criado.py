@@ -125,7 +125,8 @@ def criado():
 
 def add(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
-    df = df.append({'user': id, 'item': item}, ignore_index=True)
+    if item not in df[df['user'] == id]['item']:
+        df = df.append({'user': id, 'item': item}, ignore_index=True)
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user' == id]]['item'].values)}")
 
@@ -144,10 +145,10 @@ def list_fun(id, _):
 
 def help_fun(id, _):
     send_message(id, """Supported commands:
-                        'add name of item'
-                        'rem name of item'
-                        'list'
-                        'help'""")
+    'add name of item'
+    'rem name of item'
+    'list'
+    'help'""")
 
 
 functions = {
