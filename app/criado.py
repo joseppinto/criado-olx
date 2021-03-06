@@ -128,9 +128,7 @@ def add(id, item):
     if item not in df[df['user'] == id]['item']:
         df = df.append({'user': id, 'item': item}, ignore_index=True)
     set_table(WISHLIST_TABLE_NAME, df)
-    m = f"Current items:\n{list(df[df['user' == id]]['item'].values)}"
-    print(m)
-    send_message(id, m)
+    send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
 def rem(id, item):
@@ -139,16 +137,12 @@ def rem(id, item):
     ind = aux[aux['item'] == item].index
     df.drop(ind, axis=0, inplace=True)
     set_table(WISHLIST_TABLE_NAME, df)
-    m = f"Current items:\n{list(df[df['user' == id]]['item'].values)}"
-    print(m)
-    send_message(id, m)
+    send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
 def list_fun(id, _):
     df = get_table(WISHLIST_TABLE_NAME)
-    m = f"Current items:\n{list(df[df['user' == id]]['item'].values)}"
-    print(m)
-    send_message(id, m)
+    send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
 def help_fun(id, _):
