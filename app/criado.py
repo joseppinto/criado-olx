@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from traceback import print_stack
 
 import jinja2
 import lxml.html
@@ -133,7 +134,7 @@ def add(id, item):
 
 def rem(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
-    df = df[df['item'] != item]
+    df = df[df['item'] != item]  # fix dis
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user' == id]]['item'].values)}")
 
@@ -171,7 +172,7 @@ def get_table(table):
     try:
         df = pd.read_sql(table, CONN, columns=columns)
     except Exception as e:
-        log(str(e))
+        print_stack()
 
     return df
 
