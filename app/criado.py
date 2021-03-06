@@ -52,9 +52,9 @@ def receive_message():
                         command = arr[0].lower()
     except Exception as e:
         log(e)
+    yield "OK", 200
     if command in functions:
         functions[command](sender_id, ' '.join(arr[1:]))
-    return "OK", 200
 
 
 @app.route('/', methods=['GET'])
@@ -133,9 +133,7 @@ def add(id, item):
 
 def rem(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
-    aux = df[df['user'] != id]
-    ind = aux[aux['item'] == item].index
-    df.drop(ind, axis=0, inplace=True)
+    df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
