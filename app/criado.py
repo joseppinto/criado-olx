@@ -70,17 +70,18 @@ def update():
 
 # BOT LOGIC
 def criado():
-    results = {
-        'item': [],
-        'url': [],
-        'title': [],
-        'price': []
-    }
     main_df = get_table(ADS_TABLE_NAME)
     wish_df = get_table(WISHLIST_TABLE_NAME)
     dfs = []
     new_ads = 0
     for u in wish_df['user'].unique():
+        results = {
+            'user': [],
+            'item': [],
+            'url': [],
+            'title': [],
+            'price': []
+        }
         df = main_df[main_df.user == u]
         w_df = wish_df[wish_df.user == u]
 
