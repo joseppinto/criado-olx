@@ -6,7 +6,7 @@ import jinja2
 import lxml.html
 import pandas as pd
 import requests
-from flask import Flask
+from flask import Flask, request
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
