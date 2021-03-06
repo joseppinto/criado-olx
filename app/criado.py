@@ -167,9 +167,9 @@ def get_table(table):
         df = pd.DataFrame(columns=['user', 'item'])
 
     try:
-        df = pd.read_sql(f'select * from "{table}"', CONN)
+        df = pd.read_sql(f'select * from "{table}";', CONN)
     except Exception as e:
-        log(e)
+        log(str(e))
 
     return df
 
