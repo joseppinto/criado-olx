@@ -53,7 +53,7 @@ def receive_message():
     except Exception as e:
         log(e)
     if command in functions:
-        return Response(functions[command](sender_id, ' '.join(arr[1:])), mimetype='text/html')
+        return Response(next(functions[command](sender_id, ' '.join(arr[1:]))), mimetype='text/html')
     return "OK", 200
 
 
