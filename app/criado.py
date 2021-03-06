@@ -15,7 +15,6 @@ app = Flask(__name__)
 DIR = os.path.dirname(os.path.realpath(__file__))
 HTML_PAGE_PATH = f'{DIR}/templates/index.html'
 
-MESSENGER_ID = os.environ["MESSENGER_ID"]
 MESSENGER_PAGE_ACCESS_TOKEN = os.environ["PAGE_ACCESS_TOKEN"]
 VERIFY_TOKEN = os.environ["VERIFY_TOKEN"]
 
@@ -113,7 +112,7 @@ def criado():
         if new_ads_flag:
             df = pd.concat([df, pd.DataFrame(results)], axis=0).sort_values(['price'])
             df.to_sql(ADS_TABLE_NAME, CONN, if_exists='replace')
-            message_results(results)
+            message_results(u, results)
         print_index(df, new_ads_flag)
         print(f"Found {len(results['url'])} ads")
 
@@ -194,14 +193,14 @@ def print_index(df, flag):
         text_file.close()
 
 
-def message_results(r):
+def message_results(u, r):
     if len(r['url']) == 0:
         return
     message = ""
     for i in range(len(r['url'])):
         message += f"Item: {r['title'][i]}\nPreço: {r['price'][i]}\nUrl: {r['url'][i]}\n---\n"
 
-    send_message(MESSENGER_ID, message)
+    send_message(u, message)
 
 
 def send_message(recipient_id, message_text):
