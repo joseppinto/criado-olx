@@ -2,7 +2,6 @@ pandas
 lxml
 requests
 apscheduler
-django-request
 Flask
 gunicorn
 jinja2
