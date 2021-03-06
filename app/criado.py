@@ -162,12 +162,14 @@ functions = {
 # UTILS
 def get_table(table):
     if table == ADS_TABLE_NAME:
-        df = pd.DataFrame(columns=['user', 'item', 'url', 'title', 'price'])
+        columns = ['user', 'item', 'url', 'title', 'price']
+        df = pd.DataFrame(columns=columns)
     elif table == WISHLIST_TABLE_NAME:
-        df = pd.DataFrame(columns=['user', 'item'])
+        columns = ['user', 'item']
+        df = pd.DataFrame(columns=columns)
 
     try:
-        df = pd.read_sql(f'select * from "{table}";', CONN)
+        df = pd.read_sql(table, CONN, columns=columns)
     except Exception as e:
         log(str(e))
 
@@ -175,7 +177,7 @@ def get_table(table):
 
 
 def set_table(table, df):
-    df.to_sql(table, CONN, if_exists='replace')
+    df.to_sql(table, CONN, if_exists='replace', index=False)
 
 
 def save_ad(r, user, item, url, title, price):
