@@ -128,7 +128,9 @@ def add(id, item):
     if item not in df[df['user'] == id]['item']:
         df = df.append({'user': id, 'item': item}, ignore_index=True)
     set_table(WISHLIST_TABLE_NAME, df)
-    send_message(id, f"Current items:\n{list(df[df['user' == id]]['item'].values)}")
+    m = f"Current items:\n{list(df[df['user' == id]]['item'].values)}"
+    print(m)
+    send_message(id, m)
 
 
 def rem(id, item):
@@ -137,13 +139,16 @@ def rem(id, item):
     ind = aux[aux['item'] == item].index
     df.drop(ind, axis=0, inplace=True)
     set_table(WISHLIST_TABLE_NAME, df)
-    send_message(id, f"Current items:\n{list(df[df['user' == id]]['item'].values)}")
+    m = f"Current items:\n{list(df[df['user' == id]]['item'].values)}"
+    print(m)
+    send_message(id, m)
 
 
 def list_fun(id, _):
     df = get_table(WISHLIST_TABLE_NAME)
-    print("test")
-    send_message(id, f"Current items:\n{list(df[df['user' == id]]['item'].values)}")
+    m = f"Current items:\n{list(df[df['user' == id]]['item'].values)}"
+    print(m)
+    send_message(id, m)
 
 
 def help_fun(id, _):
@@ -215,7 +220,6 @@ def message_results(u, r):
 
 
 def send_message(recipient_id, message_text):
-    print("test2")
     log(f"Sending message to {recipient_id}:\n {message_text}\n")
 
     params = {
@@ -234,7 +238,6 @@ def send_message(recipient_id, message_text):
     })
     r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
-        print("test3")
         log(r.status_code)
         log(r.text)
 
