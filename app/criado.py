@@ -39,7 +39,7 @@ def verify():
 
 
 @app.route('/messenger', methods=['POST'])
-def webhook():
+def receive_message():
     data = request.get_json()
     try:
         if data["object"] == "page":
