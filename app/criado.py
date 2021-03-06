@@ -52,9 +52,9 @@ def receive_message():
                         command = arr[0].lower()
     except Exception as e:
         log(e)
-    yield "OK", 200
     if command in functions:
         functions[command](sender_id, ' '.join(arr[1:]))
+    return "OK", 200
 
 
 @app.route('/', methods=['GET'])
@@ -126,7 +126,7 @@ def criado():
 def add(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
     if item not in df[df['user'] == id]['item']:
-        df = df.append({'user': id, 'item': item}, ignore_index=True)
+        df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
