@@ -54,6 +54,7 @@ def receive_message():
                             functions[command](sender_id, ' '.join(arr[1:]))
     except Exception as e:
         log(e)
+    return "OK", 200
 
 
 @app.route('/', methods=['GET'])
