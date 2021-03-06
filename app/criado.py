@@ -6,7 +6,7 @@ import jinja2
 import lxml.html
 import pandas as pd
 import requests
-from flask import Flask, request, Response, stream_with_context
+from flask import Flask, request
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -53,8 +53,7 @@ def receive_message():
     except Exception as e:
         log(e)
     if command in functions:
-        return Response(stream_with_context(
-            functions[command](sender_id, ' '.join(arr[1:]))))
+        functions[command](sender_id, ' '.join(arr[1:]))
     return "OK", 200
 
 
@@ -125,39 +124,31 @@ def criado():
 
 
 def add(id, item):
-    yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     if item not in df[df['user'] == id]['item']:
         df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates()
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
-    yield "OK"
 
 
 def rem(id, item):
-    yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
-    yield "OK"
 
 
 def list_fun(id, _):
-    yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
-    yield "OK"
 
 
 def help_fun(id, _):
-    yield "OK"
     send_message(id, """Supported commands:
     'add name of item'
     'rem name of item'
     'list'
     'help'""")
-    yield "OK"
 
 
 functions = {
