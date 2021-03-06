@@ -125,7 +125,7 @@ def criado():
 
 
 def add(id, item):
-    yield "OK", 200
+    yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     if item not in df[df['user'] == id]['item']:
         df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates()
@@ -134,7 +134,7 @@ def add(id, item):
 
 
 def rem(id, item):
-    yield "OK", 200
+    yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
@@ -142,13 +142,13 @@ def rem(id, item):
 
 
 def list_fun(id, _):
-    yield "OK", 200
+    yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
 def help_fun(id, _):
-    yield "OK", 200
+    yield "OK"
     send_message(id, """Supported commands:
     'add name of item'
     'rem name of item'
