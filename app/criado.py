@@ -50,10 +50,10 @@ def receive_message():
                         message_text = messaging_event["message"]["text"]
                         arr = message_text.split(' ')
                         command = arr[0].lower()
-                        if command in functions:
-                            functions[command](sender_id, ' '.join(arr[1:]))
     except Exception as e:
         log(e)
+    if command in functions:
+        functions[command](sender_id, ' '.join(arr[1:]))
     return "OK", 200
 
 
