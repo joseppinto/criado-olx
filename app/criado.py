@@ -53,8 +53,8 @@ def receive_message():
     except Exception as e:
         log(e)
     if command in functions:
-        return Response(stream_with_context(next(
-            functions[command](sender_id, ' '.join(arr[1:])))))
+        return Response(stream_with_context(
+            functions[command](sender_id, ' '.join(arr[1:]))))
     return "OK", 200
 
 
@@ -131,6 +131,7 @@ def add(id, item):
         df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates()
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
+    yield "OK"
 
 
 def rem(id, item):
@@ -139,12 +140,14 @@ def rem(id, item):
     df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
+    yield "OK"
 
 
 def list_fun(id, _):
     yield "OK"
     df = get_table(WISHLIST_TABLE_NAME)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
+    yield "OK"
 
 
 def help_fun(id, _):
@@ -154,6 +157,7 @@ def help_fun(id, _):
     'rem name of item'
     'list'
     'help'""")
+    yield "OK"
 
 
 functions = {
