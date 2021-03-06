@@ -6,7 +6,7 @@ import jinja2
 import lxml.html
 import pandas as pd
 import requests
-from flask import Flask, request
+from flask import Flask, request, Response
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -53,7 +53,7 @@ def receive_message():
     except Exception as e:
         log(e)
     if command in functions:
-        functions[command](sender_id, ' '.join(arr[1:]))
+        return Response(functions[command](sender_id, ' '.join(arr[1:])), mimetype='text/html')
     return "OK", 200
 
 
@@ -124,6 +124,7 @@ def criado():
 
 
 def add(id, item):
+    yield "OK", 200
     df = get_table(WISHLIST_TABLE_NAME)
     if item not in df[df['user'] == id]['item']:
         df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates()
@@ -132,6 +133,7 @@ def add(id, item):
 
 
 def rem(id, item):
+    yield "OK", 200
     df = get_table(WISHLIST_TABLE_NAME)
     df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
@@ -139,11 +141,13 @@ def rem(id, item):
 
 
 def list_fun(id, _):
+    yield "OK", 200
     df = get_table(WISHLIST_TABLE_NAME)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
 def help_fun(id, _):
+    yield "OK", 200
     send_message(id, """Supported commands:
     'add name of item'
     'rem name of item'
