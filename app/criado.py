@@ -192,12 +192,11 @@ def render_template(file_name, **context):
         .render(context)
 
 
-def print_index(df, flag):
-    if not os.path.exists(HTML_PAGE_PATH) or flag:
-        s = render_template('template.html', df=df)
-        text_file = open(f'{DIR}/templates/index.html', "w")
-        text_file.write(s)
-        text_file.close()
+def print_index(df):
+    s = render_template('template.html', df=df)
+    text_file = open(f'{DIR}/templates/index.html', "w")
+    text_file.write(s)
+    text_file.close()
 
 
 def message_results(u, r):
