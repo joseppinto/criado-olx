@@ -126,7 +126,7 @@ def criado():
 def add(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
     if item not in df[df['user'] == id]['item']:
-        df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates
+        df = df.append({'user': id, 'item': item}, ignore_index=True).drop_duplicates()
     set_table(WISHLIST_TABLE_NAME, df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
