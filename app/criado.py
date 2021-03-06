@@ -6,7 +6,7 @@ import jinja2
 import lxml.html
 import pandas as pd
 import requests
-from flask import Flask, request, Response
+from flask import Flask, request, Response, stream_with_context
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -53,7 +53,8 @@ def receive_message():
     except Exception as e:
         log(e)
     if command in functions:
-        return Response(next(functions[command](sender_id, ' '.join(arr[1:]))), mimetype='text/html')
+        return Response(stream_with_context(next(
+            functions[command](sender_id, ' '.join(arr[1:]))), mimetype='text/html'))
     return "OK", 200
 
 
