@@ -109,7 +109,7 @@ def criado():
                     if df[df['url'] == url]['price'].values[0] > price:
                         index = df[df['url'] == url].index
                         df.drop(index, axis=0, inplace=True)
-                        save_ad(results, item, url, title, price)
+                        save_ad(results, u,  item, url, title, price)
 
         new_ads += len(results['url'])
         if len(results['url']) > 0:
