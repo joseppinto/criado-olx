@@ -103,13 +103,13 @@ def criado():
                 price = ad.xpath(".//p[contains(@class,'price')]/strong/text()")[0].strip()
                 price = float(price.replace("€", "").replace(",", "."))
 
-                if df['url'].str.contains(url).sum() == 0:
+                if not df[df['url'] == url].shape[0] > 0:
                     save_ad(results, u, item, url, title, price)
                 else:
                     if df[df['url'] == url]['price'].values[0] > price:
                         index = df[df['url'] == url].index
                         df.drop(index, axis=0, inplace=True)
-                        save_ad(results, u,  item, url, title, price)
+                        save_ad(results, u, item, url, title, price)
 
         new_ads += len(results['url'])
         if len(results['url']) > 0:
