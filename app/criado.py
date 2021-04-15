@@ -124,7 +124,7 @@ def criado():
     if new_ads > 0:
         main_df = pd.concat(dfs, axis=0)
         set_table(ADS_TABLE_NAME, main_df)
-        print_index(main_df)
+    print_index(main_df)
     print(f"Found {new_ads} ads")
 
 
