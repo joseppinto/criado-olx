@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import sys
@@ -82,7 +83,7 @@ def criado():
             'title': [],
             'price': []
         }
-        new_results = results.copy()
+        new_results = copy.deepcopy(results)
 
         df = main_df[main_df.user == u]
         w_df = wish_df[wish_df.user == u]
