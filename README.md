@@ -1,5 +1,7 @@
 # criado-olx
 
+![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)
+
 A bot that:
 
 * Scrapes OLX.pt for items on my wishlist periodically.
