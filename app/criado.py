@@ -22,7 +22,7 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 ADS_TABLE_NAME = 'ads'
 WISHLIST_TABLE_NAME = 'wishlist'
 ENGINE = create_engine(DATABASE_URL)
-CONN = ENGINE.connect()
+CONN = ENGINE.connect().execution_options(autocommit=True)
 
 # FLASK ROUTES
 if __name__ == '__main__':
