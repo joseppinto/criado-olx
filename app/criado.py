@@ -82,6 +82,8 @@ def criado():
             'title': [],
             'price': []
         }
+        new_results = results.copy()
+
         df = main_df[main_df.user == u]
         w_df = wish_df[wish_df.user == u]
 
@@ -103,18 +105,20 @@ def criado():
                 price = ad.xpath(".//p[contains(@class,'price')]/strong/text()")[0].strip()
                 price = float(price.replace("€", "").replace(",", "."))
 
+                save_ad(results, u, item, url, title, price)
                 if not df[df['url'] == url].shape[0] > 0:
-                    save_ad(results, u, item, url, title, price)
+                    save_ad(new_results, u, item, url, title, price)
                 else:
                     if df[df['url'] == url]['price'].values[0] > price:
                         index = df[df['url'] == url].index
                         df.drop(index, axis=0, inplace=True)
-                        save_ad(results, u, item, url, title, price)
+                        save_ad(new_results, u, item, url, title, price)
 
-        new_ads += len(results['url'])
-        if len(results['url']) > 0:
-            df = pd.concat([df, pd.DataFrame(results)], axis=0).sort_values(['price'])
-            message_results(u, results)
+        new_ads += len(new_results['url'])
+        if len(new_results['url']) > 0:
+            message_results(u, new_results)
+
+        df = pd.DataFrame(results).sort_values(['price'])
         dfs.append(df)
     if new_ads > 0:
         main_df = pd.concat(dfs, axis=0)
