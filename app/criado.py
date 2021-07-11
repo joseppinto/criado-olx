@@ -121,9 +121,9 @@ def criado():
 
         df = pd.DataFrame(results).sort_values(['price'])
         dfs.append(df)
-    if new_ads > 0:
-        main_df = pd.concat(dfs, axis=0)
-        set_table(ADS_TABLE_NAME, main_df)
+
+    main_df = pd.concat(dfs, axis=0)
+    set_table(ADS_TABLE_NAME, main_df)
     print_index(main_df)
     print(f"Found {new_ads} ads")
 
@@ -140,7 +140,6 @@ def rem(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
     df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
-    print_index(df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
