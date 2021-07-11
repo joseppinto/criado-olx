@@ -140,6 +140,7 @@ def rem(id, item):
     df = get_table(WISHLIST_TABLE_NAME)
     df = df[(df['user'] != id) | (df['item'] != item)]
     set_table(WISHLIST_TABLE_NAME, df)
+    print_index(df)
     send_message(id, f"Current items:\n{list(df[df['user'] == id]['item'].values)}")
 
 
