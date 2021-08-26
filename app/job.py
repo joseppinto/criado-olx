@@ -8,5 +8,5 @@ def job():
 
 
 scheduler = BlockingScheduler()
-scheduler.add_job(job, "interval", seconds=60)
+scheduler.add_job(job, "interval", seconds=300)
 scheduler.start()
